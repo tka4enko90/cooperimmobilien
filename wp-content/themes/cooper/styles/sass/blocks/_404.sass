@@ -1,0 +1,43 @@
+.section-error
+	display: flex
+	justify-content: center
+	align-items: center
+	flex-grow: 1
+	padding: 20px 0
+
+.error
+	text-align: center
+	&__title
+		font-size: 113px
+		font-weight: 700
+		line-height: 1
+		color: $accent
+	&__desc
+		font-size: 27px
+		p
+			margin-bottom: 0
+		a
+			color: $accent
+			text-decoration: underline
+			&:hover
+				text-decoration: none
+				color: $hover
+
+@media only screen and (max-width : 1359px)
+	.error
+		&__desc
+			font-size: 24px
+
+@media only screen and (max-width : 1023px)
+	.error
+		&__title
+			font-size: 100px
+		&__desc
+			font-size: 20px
+
+@media only screen and (max-width : 767px)
+	.error
+		&__title
+			font-size: 90px
+		&__desc
+			font-size: 18px

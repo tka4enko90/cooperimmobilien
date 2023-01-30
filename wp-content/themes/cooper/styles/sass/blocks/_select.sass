@@ -1,0 +1,58 @@
+.jq-selectbox
+	width: 100%
+	&:hover, &:focus, &:active
+		.jq-selectbox__select
+			box-shadow: none
+			background: #fff
+	&.focused
+		.jq-selectbox__select
+			border-color: #575757
+	&__select
+		height: 43px
+		padding: 0 35px 0 20px
+		font: 600 14px/43px $userfont
+		color: $maincolor
+		text-transform: uppercase
+		text-shadow: none
+		border-radius: 0
+		box-shadow: none
+		border: 1px solid #575757
+		background: #fff
+	.placeholder
+		color: $maincolor
+	&__trigger
+		border-left: none
+		&-arrow
+			top: 18px
+			right: 16px
+			width: 10px
+			height: 6px
+			border: none
+			background: url(../images/dist/select-arrow.png) 0 0 no-repeat
+			background-size: contain
+	&__dropdown
+		font: 600 14px/1.4 $userfont
+		color: $maincolor
+		text-transform: uppercase
+		border-radius: 0
+		border: 1px solid #575757
+	li
+		padding: 6px 10px 6px 20px
+		color: $maincolor
+		&.selected
+			color: #fff
+			background: $accent
+		&.disabled
+			&:hover
+				background: $accent
+		&:hover
+			background: $accent
+
+@media only screen and (max-width : 767px)
+	.jq-selectbox
+		&__select
+			padding: 0 25px 0 12px
+			font-size: 12px
+		&__trigger
+			&-arrow
+				right: 12px

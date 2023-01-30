@@ -1,0 +1,44 @@
+.use-floating-validation-tip .wpcf7-not-valid-tip
+	position: absolute
+	display: flex
+	bottom: 3px
+	left: 15px
+	width: 100%
+	height: 100%
+	font-size: 14px
+	color: red
+
+div.wpcf7 .wpcf7-response-output
+	position: absolute
+	top: 50%
+	left: 50%
+	width: 300px
+	transform: translate(-50%, -50%)
+	margin: 0
+	padding: 20px 30px
+	font: 500 16px/1.4 $userfont
+	text-align: center
+	z-index: 800
+	border: none
+	box-shadow: 0 0 10px rgba(#000, .5)
+	background: rgba(#fff, .9)
+
+div.wpcf7 .wpcf7-spinner
+	position: absolute
+	bottom: 3px
+	left: 0
+	right: 0
+	width: 10px
+	height: 10px
+	margin: 0 auto
+	opacity: 1
+	background: url(../images/dist/loader-form.svg)
+	background-size: contain
+	&::before
+		display: none
+
+form.submitting .wpcf7-spinner
+	animation-name: spin
+	animation-duration: 1s
+	animation-iteration-count: infinite
+	animation-timing-function: linear

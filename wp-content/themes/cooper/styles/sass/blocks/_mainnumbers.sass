@@ -1,0 +1,82 @@
+.section-mainnumbers
+	position: relative
+	padding: 50px 0 215px
+	&.circle-grey
+		&::before
+			top: 15%
+	.section-header
+		&__title
+			letter-spacing: 2px
+
+.mainnumbers
+	position: relative
+	display: flex
+	justify-content: center
+	padding-top: 50px
+	&-center
+		position: relative
+		display: inline-block
+	&-item
+		position: absolute
+		display: flex
+		flex-direction: column
+		align-items: center
+		justify-content: center
+		text-align: center
+		overflow: hidden
+		border-radius: 100%
+		&::before
+			content: ''
+			position: absolute
+			top: 1px
+			left: 1px
+			width: calc(100% - 2px)
+			height: calc(100% - 2px)
+			z-index: -1
+			border-radius: 100%
+			background-color: $accent
+		&__count
+			font-weight: 700
+			color: #fff
+			white-space: nowrap
+		&__desc
+			padding: 0 15px
+			color: #fff
+			line-height: 1
+			white-space: nowrap
+		&_size-one
+			bottom: 62%
+			right: 98%
+			.mainnumbers-item__count
+				margin: 0 -7px
+				font-size: 81px
+				line-height: .9
+			.mainnumbers-item__desc
+				font-size: 27px
+		&_size-two
+			position: relative
+			.mainnumbers-item__count
+				margin: 0 -30px
+				font-size: 247px
+				line-height: 0.75
+			.mainnumbers-item__desc
+				font-size: 57px
+		&_size-three
+			bottom: 64%
+			left: 100%
+			.mainnumbers-item__count
+				margin: 0 -10px
+				font-size: 81px
+				line-height: .9
+			.mainnumbers-item__desc
+				font-size: 27px
+		&_size-four
+			top: 67%
+			left: 65%
+			z-index: 2
+			.mainnumbers-item__count
+				margin: 0 -10px 0 0
+				font-size: 167px
+				line-height: 0.82
+			.mainnumbers-item__desc
+				font-size: 41px

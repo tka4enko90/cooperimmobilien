@@ -1,0 +1,48 @@
+.section-faq
+	position: relative
+	padding: 70px 0 50px
+	&.circle-grey
+		&::before
+			top: -12%
+	&.circle-blue
+		&::after
+			top: 54%
+			left: -535px
+			margin-top: -379px
+	.section-header__title
+		text-align: center
+		br
+			display: none
+
+.faq
+	&-items
+		position: relative
+		display: flex
+		flex-wrap: wrap
+		justify-content: space-between
+		&::before
+			content: ''
+			position: absolute
+			top: 39%
+			left: 50%
+			transform: translate(-50%, -50%)
+			width: 83px
+			height: 301px
+			background: url(../images/dist/arrow.svg) 0 0 no-repeat
+			background-size: contain
+	&-item
+		width: calc(100% / 2 - 130px)
+		margin-bottom: 28px
+		padding-left: 80px
+		&:nth-child(even)
+			padding-left: 30px
+		&__title
+			margin-bottom: 65px
+			font-size: 27px
+			font-weight: 600
+		&__desc
+			padding-left: 120px
+			font-size: 27px
+	&__btn
+		max-width: 270px
+		margin: 0 auto

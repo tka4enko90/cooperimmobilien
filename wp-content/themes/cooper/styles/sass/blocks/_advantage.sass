@@ -1,0 +1,71 @@
+.section-advantage
+	padding: 30px 0 47px
+
+.advantage
+	&-item
+		display: flex
+		justify-content: space-between
+		margin-bottom: 50px
+		&:last-child
+			margin-bottom: 0
+		&__desc
+			flex: 0 0 auto
+			width: 38%
+			padding: 0 40px 0 80px
+			font-size: 27px
+			p
+				margin-bottom: 24px
+			b
+				font-weight: 600
+		&__iframe
+			position: relative
+			padding-top: 30px
+			width: 62%
+			max-width: 1010px
+			iframe
+				width: 100% !important
+				height: 100% !important
+		&__pict, &-twopict
+			position: relative
+			max-width: 1010px
+			width: 62%
+			img
+				width: 100%
+				height: 100%
+				object-fit: cover
+		&-twopict
+			height: 700px
+			&__item
+				position: relative
+				height: 50%
+				overflow: hidden
+			&__desc
+				position: absolute
+				top: 15px
+				left: 0
+				padding: 5px 20px
+				z-index: 2
+				font-size: 27px
+				color: #fff
+				background: rgba($maincolor, .5)
+		&:nth-child(odd)
+			.advantage-item__pict, .advantage-item__iframe
+				&::after
+					content: ''
+					position: absolute
+					left: -25px
+					bottom: -20px
+					width: 47px
+					height: 47px
+					z-index: -1
+					opacity: 0
+					transition: opacity $anim 1s
+					transition-duration: 1s
+					border-radius: 100%
+					background-color: $accent
+		&:nth-child(even)
+			flex-direction: row-reverse
+			align-items: flex-start
+			.advantage-item
+				&__desc
+					padding: 35px 40px 0 80px

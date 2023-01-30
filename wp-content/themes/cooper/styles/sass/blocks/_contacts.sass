@@ -1,0 +1,93 @@
+.section-contacts
+	position: relative
+	padding: 145px 0 250px
+	&:after
+		content: ''
+		position: absolute
+		top: 35px
+		left: -40px
+		width: 27.2vw
+		max-width: 511px
+		height: 847px
+		z-index: -1
+		background: url(../images/dist/logo-contact.png) 0 0 no-repeat
+		background-size: contain
+
+.contacts
+	position: relative
+	display: flex
+	flex-direction: column
+	align-items: center
+	&.circle-blue
+		&::after
+			width: 153px
+			height: 153px
+			top: -12%
+			right: -4.7%
+	&-header
+		text-align: center
+		&__toptitle
+			margin-bottom: 15px
+			font-size: 51px
+			font-weight: 500
+			line-height: 1
+		&__title
+			margin-bottom: 28px
+			font-size: 76px
+			font-weight: 500
+			color: $accent
+			line-height: 1
+		&__desc
+			font-size: 31px
+	&-items
+		position: relative
+		display: flex
+		flex-direction: column
+		margin: 25px auto 0
+		padding-top: 115px
+		&:before
+			content: ''
+			position: absolute
+			top: 0
+			left: 0
+			right: 0
+			width: 81px
+			height: 72px
+			margin: 0 auto
+			background: url(../images/dist/tea.svg) 0 0 no-repeat
+			background-size: contain
+		&-row
+			display: flex
+			justify-content: center
+			align-items: flex-start
+		&__desc
+			margin-top: -18px
+			font-size: 14px
+			font-weight: 500
+			text-align: center
+	&-item
+		display: flex
+		margin-bottom: 42px
+		padding-right: 10px
+		&:nth-child(even)
+			flex-grow: 1
+			padding-right: 0
+		&__icon
+			position: relative
+			flex-shrink: 0
+			top: 2px
+			width: 35px
+			height: 42px
+		&__title, &__link
+			font-size: 19px
+			font-weight: 700
+			line-height: 1.2
+		&__link
+			white-space: nowrap
+			color: $maincolor
+			text-decoration: none
+			&:hover
+				color: $accent
+		&__desc
+			font-size: 14px
+			font-weight: 500

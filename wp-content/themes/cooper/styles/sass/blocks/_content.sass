@@ -1,0 +1,95 @@
+.section-content
+	position: relative
+	padding: 30px 0 40px
+
+.decor
+	&-left-one, &-left-two, &-left-three, &-left-four
+		&.circle-blue
+			&:after
+				left: -578px
+	&-left-one
+		&.circle-blue
+			&:after
+				top: 18%
+		&.circle-grey
+			&:before
+				top: 6.5%
+	&-left-two
+		&.circle-blue
+			&:after
+				top: 43%
+		&.circle-grey
+			&:before
+				top: 31%
+	&-left-three
+		&.circle-blue
+			&:after
+				top: 66%
+		&.circle-grey
+			&:before
+				top: 57%
+	&-left-four
+		&.circle-blue
+			&:after
+				top: 88%
+		&.circle-grey
+			&:before
+				top: 79.5%
+	&-right-one, &-right-two, &-right-three, &-right-four
+		&.circle-blue
+			&::after
+				right: -460px
+	&-right-one
+		&.circle-blue
+			&::after
+				top: 7%
+	&-right-two
+		&.circle-blue
+			&::after
+				top: 31%
+	&-right-three
+		&.circle-blue
+			&::after
+				top: 58%
+	&-right-four
+		&.circle-blue
+			&::after
+				top: 80%
+
+.content
+	position: relative
+	font-size: 27px
+	&:before, &::after
+		content: ''
+		position: absolute
+	&::before
+		top: 1.5%
+		left: -90px
+		width: 83px
+		height: 301px
+		z-index: -1
+		background: url(../images/dist/arrow.svg) 0 0 no-repeat
+		background-size: contain
+	&::after
+		top: -29px
+		right: -75px
+		width: 153px
+		height: 153px
+		z-index: -1
+		border-radius: 100%
+		background-color: $accent
+	p
+		margin: 1rem 0
+	b, strong
+		font-weight: 600
+	a
+		color: $accent
+		text-decoration: underline
+		filter: invert(1)
+		mix-blend-mode: difference
+		&:hover
+			color: $hover
+			text-decoration: none
+	ul
+		padding-left: 24px
+		list-style-type: disc

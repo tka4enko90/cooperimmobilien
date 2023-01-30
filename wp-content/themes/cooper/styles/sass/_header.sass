@@ -1,0 +1,205 @@
+.header
+	position: fixed
+	top: 0
+	left: 0
+	right: 0
+	z-index: 999
+	padding: 33px 0 60px
+	transition: transform .6s ease-in-out, padding $anim
+	transform: none
+	background: #fff
+	&.fixed
+		padding: 20px
+		.header-count
+			visibility: hidden
+			opacity: 0
+	&.scrollDown
+		transform: translateY(-100%)
+	&.scrollUp
+		transform: translateY(0%)
+	&-main
+		position: relative
+		display: flex
+		justify-content: space-between
+	&-left, &-rigth
+		width: calc(50% - 224px)
+		flex-grow: 1
+	&-left
+		position: relative
+		padding-right: 70px
+	&-menu
+		display: flex
+		padding-top: 15px
+		li
+			&:not(:last-child)
+				margin-right: 80px
+			a
+				font-size: 19px
+				font-weight: 500
+				color: $maincolor
+				white-space: nowrap
+				text-transform: uppercase
+				text-decoration: none
+				&:hover
+					color: $accent
+	&-count
+		position: absolute
+		// top: 86px
+		top: 70px
+		left: 50%
+		transform: translateX(-50%)
+		transition: opacity $anim
+		margin-left: -330px
+		padding-left: 145px
+		font-size: 19px
+		font-weight: 500
+		opacity: 1
+		&::before
+			content: ''
+			position: absolute
+			top: 50%
+			left: 0
+			width: 125px
+			height: 6px
+			margin-top: -3px
+			background-color: $accent
+	&-logo
+		width: 224px
+	&-rigth
+		display: flex
+		justify-content: space-between
+		padding: 0 20px 0 70px
+		.header-menu
+			li
+				&:not(:last-child)
+					margin-right: 70px
+	&-btns
+		display: flex
+		flex-direction: column
+		width: 100%
+		max-width: 325px
+		margin-left: 32px
+		&__btn
+			position: relative
+			display: flex
+			align-items: center
+			justify-content: center
+			width: 100%
+			height: 53px
+			padding: 0 5px
+			font-size: 19px
+			font-weight: 500
+			text-transform: uppercase
+			text-align: center
+			// color: $maincolor
+			color: #fff
+			text-decoration: none
+			overflow: hidden
+			transition: background $anim
+			// border: 1px solid $accent
+			// animation: glowing 1300ms infinite
+			// background: linear-gradient(45deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4)
+			// background-size: 300%
+			&:first-child
+				&:before
+					animation: animate 10s linear infinite
+			&:last-child
+				&:before
+					animation: animate 9s linear infinite
+			&::before
+				content: ""
+				position: absolute
+				top: -5px
+				right: -5px
+				bottom: -5px
+				left: -5px
+				z-index: -1
+				transition: .5s
+				filter: blur(5px)
+				opacity: 1
+				// animation: animate 4s linear infinite
+				background: linear-gradient(90deg, $accent, #f441a5, $accent, #00fffc, $accent)
+				background-size: 400%
+			&:hover
+				color: #fff
+				background: $accent
+			+ a
+				margin-top: 5px
+	&-burger
+		position: absolute
+		top: 16px
+		right: -38px
+		height: 20px
+		cursor: pointer
+		span
+			position: relative
+			display: block
+			left: 0
+			width: 24px
+			height: 2px
+			margin: 7px auto
+			background-color: #000
+			transition: all $anim
+			&:nth-of-type(1)
+				margin-top: 0px
+			&:nth-of-type(3)
+				margin-bottom: 0px
+		&.active
+			span
+				&:nth-of-type(1)
+					left: 3px
+				&:nth-of-type(2)
+					left: -3px
+				&:nth-of-type(3)
+					left: 3px
+	&-lang
+		position: absolute
+		top: 9px
+		right: -122px
+		.jq-selectbox
+			&__select
+				width: 62px
+				height: 30px
+				padding: 0 20px 0 9px
+				font-size: 19px
+				font-weight: 500
+				line-height: 28px
+				text-transform: uppercase
+				border: 1px solid black
+				border-radius: 8px
+			&__trigger
+				width: 20px
+				&-arrow
+					top: 12px
+					right: 10px
+					width: 9px
+					height: 7px
+					background: url(../images/dist/select-arrow.png) 0 0 no-repeat
+					background-size: contain
+			&__dropdown
+				font-size: 19px
+				font-weight: 500
+				overflow: hidden
+				border-radius: 8px
+			li
+				padding: 0px 10px 0px 9px
+
+@keyframes animate
+	0%
+		background-position: 0%
+
+	100%
+		background-position: -400%
+
+// @keyframes glowing
+// 	0%
+// 		color: #fff
+// 		background-color: $accent
+// 		box-shadow: 0 0 3px $accent
+// 	50%
+// 		color: #fff
+// 		background-color: $hover
+// 		box-shadow: 0 0 15px $hover
+// 	100%
+// 		background-color: #fff
+// 		box-shadow: 0 0 3px #fff

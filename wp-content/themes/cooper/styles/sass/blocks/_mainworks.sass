@@ -1,0 +1,55 @@
+.section-mainworks
+	position: relative
+	padding: 65px 0 55px
+	&.circle-grey
+		&:before
+			bottom: 10px
+	&.circle-blue
+		&::after
+			top: -15%
+			left: -535px
+
+.mainworks
+	&-row
+		display: flex
+		&:nth-child(even)
+			justify-content: flex-end
+			margin-top: -165px
+			.mainworks-item__num
+				margin-left: -166px
+		&:nth-child(3n + 3)
+			margin-top: -115px
+	&-item
+		display: flex
+		width: 50%
+		&__num
+			position: relative
+			display: flex
+			align-items: center
+			justify-content: center
+			top: 55px
+			flex: 0 0 auto
+			width: 151px
+			height: 151px
+			margin-left: -90px
+			font-size: 113px
+			color: $accent
+			line-height: 1
+			border-radius: 100%
+			border: 1px dashed $accent
+		&-desc
+			position: relative
+			padding-left: 25px
+			padding-right: 35px
+		&__title
+			margin-bottom: 34px
+			font-size: 27px
+			font-weight: 600
+			line-height: 1.1
+		&__text
+			font-size: 27px
+			line-height: 1.1
+			p
+				margin-bottom: 34px
+		&__icon
+			margin-top: 30px

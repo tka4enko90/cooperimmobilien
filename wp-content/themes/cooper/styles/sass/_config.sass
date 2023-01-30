@@ -1,0 +1,375 @@
+// USER VARIABLES SECTION
+
+$accent: #0082ff// Accent Color
+$grey: #e5e5e5// Gray Color
+$hover: #002dff
+$fontsize: 19px // Body Font Size
+$maincolor: #000 // Text Color
+$lineheight: 1.6 // Document Line Height
+$userfont: tthoves-cbr, sans-serif // User Font Family
+// $secfont: , sans-serif // Second Font Family
+// $otherfont: , sans-serif // Other Font Family
+$systemfont: -apple-system, BlinkMacSystemFont, Arial, sans-serif // System Font Family
+$anim: .25s ease-in-out
+%img
+	img
+		display: block
+		width: 100%
+		height: 100%
+		object-fit: cover
+
+// Bootstrap compatible gutter variable => $gutter
+// $grid-gutter-width: 30px
+// $gutter: $grid-gutter-width
+$grid-breakpoints: (xs: 0, sm: 576px, md: 768px, lg: 1024px, xl: 1360px, xxl: 1700px)
+$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1330px, xxl: 1670px)
+
+// IMPORT SECTION
+
+@import 'node_modules/bootstrap/scss/bootstrap-reboot.scss' // Bootstrap Reboot collection
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints.scss' // Bootstrap Breakpoints mixin
+@import 'node_modules/bootstrap/scss/bootstrap-grid.scss' // Optional Bootstrap Grid
+// @import 'node_modules/bootstrap/scss/_utilities.scss' // Optional Bootstrap Utilites
+
+// FONTS LOAD SECTION
+// 100 Extra Light or Ultra Light;
+// 200 Light or Thin; 300 Book or Demi;
+// 400 Regular or Normal;
+// 500 Medium;
+// 600 Semibold or Demibold;
+// 700 Bold;
+// 800 Black or Extra Bold or Heavy;
+// 900 Extra Black or Fat or Ultra Black
+
+@mixin font($fname, $fstyle, $fweight, $furl)
+	@font-face
+		font-family: $fname
+		font-style: $fstyle
+		font-display: swap
+		font-weight: $fweight
+
+		src: url(#{$furl}.woff2) format('woff2'),
+		src: url(#{$furl}.woff) format('woff'),
+		src: url(#{$furl}.ttf) format('truetype')
+
+@include font('tthoves-cbr', normal, 700, '../fonts/tthoves/TTHoves-Bold')
+@include font('tthoves-cbr', normal, 600, '../fonts/tthoves/TTHoves-DemiBold')
+@include font('tthoves-cbr', italic, 400, '../fonts/tthoves/TTHoves-Italic')
+@include font('tthoves-cbr', normal, 500, '../fonts/tthoves/TTHoves-Medium')
+@include font('tthoves-cbr', normal, 400, '../fonts/tthoves/TTHoves-Regular')
+
+// GENERAL DOCUMENT STYLES
+
+::placeholder
+	color: $maincolor
+	opacity: 1
+
+::selection
+	background-color: $accent
+	color: #fff
+
+input, textarea
+	outline: none
+	&:focus:required:invalid
+		border-color: red
+	&:required:valid
+		border-color: green
+
+input[type="checkbox"],
+input[type="radio"]
+	width: 0
+	appearance: none
+	border: none
+
+html
+	height: 100%
+
+body
+	display: flex
+	flex-direction: column
+	position: relative
+	min-width: 320px
+	min-height: 100%
+	font-family: $userfont
+	font-size: $fontsize
+	line-height: $lineheight
+	color: $maincolor
+	overflow-x: hidden
+	-webkit-font-smoothing: antialiased
+	background: #fff
+	&.overflow
+		overflow-y: hidden
+
+.hidden
+	display: none
+
+ul
+	margin-bottom: 0
+	padding-left: 0
+	list-style-type: none
+
+a
+	transition: color .25s ease-out
+	&:focus
+		outline: none
+
+img
+	display: block
+
+.container
+	padding: 0 20px
+
+.wrapper
+	display: flex
+	flex-direction: column
+	flex: 1 0 auto
+	overflow: hidden
+
+.section
+	z-index: 2
+
+.circle-grey
+	&:before
+		content: ''
+		position: absolute
+		width: 342px
+		height: 342px
+		z-index: -1
+		opacity: 0
+		transition: opacity $anim 1s
+		transition-duration: 1s
+		border-radius: 100%
+		border: 60px solid $grey
+	&_left
+		&:before
+			left: -245px
+	&_right
+		&:before
+			right: -245px
+
+.aos-animate
+	*
+		&:before, &::after
+			opacity: 1 !important
+	&.circle-grey
+		&:before
+			opacity: 1 !important
+	&.circle-blue
+		&::after
+			opacity: 1 !important
+
+.aos-animate
+	&:before
+		opacity: 1 !important
+	&::after
+		opacity: 1 !important
+	*
+		&.circle-grey
+			&:before
+				opacity: 1 !important
+		&.circle-blue
+			&::after
+				opacity: 1 !important
+
+.circle-blue
+	&::after
+		content: ''
+		position: absolute
+		z-index: -1
+		opacity: 0
+		transition: opacity $anim 1s
+		transition-duration: 1s
+		border-radius: 100%
+		background: $accent
+	&_big
+		&:after
+			width: 658px
+			height: 658px
+	&_small
+		&:after
+			width: 153px
+			height: 153px
+	&_little
+		&:after
+			width: 47px
+			height: 47px
+
+@media only screen and (max-width : 1359px)
+	.circle-blue
+		&_big
+			&::after
+				width: 500px
+				height: 500px
+		&_small
+			&::after
+				width: 120px
+				height: 120px
+
+@media only screen and (max-width : 1023px)
+	.circle-grey
+		&:before
+			width: 220px
+			height: 220px
+			border-width: 40px
+		&_left
+			&:before
+				left: -170px
+		&_right
+			&:before
+				right: -170px
+
+	.circle-blue
+		&_big
+			&::after
+				width: 400px
+				height: 400px
+		&_small
+			&::after
+				width: 70px
+				height: 70px
+
+@media only screen and (max-width : 767px)
+	.circle-blue
+		&_big
+			&::after
+				width: 264px
+				height: 264px
+
+@media only screen and (max-width : 575px)
+	.circle-grey
+		&:before
+			width: 138px
+			height: 138px
+			border-width: 25px
+		&_left
+			&:before
+				left: -98px
+		&_right
+			&:before
+				right: -98px
+
+.section-header
+	position: relative
+	padding-bottom: 60px
+	&_center
+		text-align: center
+	&__toptitle
+		font-size: 58px
+		font-weight: 500
+		line-height: 1.2
+		letter-spacing: 1.5px
+	&__title
+		margin-bottom: 15px
+		font-size: 113px
+		font-weight: 500
+		color: $accent
+		line-height: 1
+		// letter-spacing: 6px
+		letter-spacing: 1.6px
+		br
+			display: none
+	&__subtitle
+		margin-bottom: 30px
+		font-size: 83px
+		line-height: 1
+		br
+			display: none
+	&__desc
+		font-size: 40px
+		line-height: 1.2
+
+@media only screen and (max-width : 1699.99px)
+	.section-header
+		&__toptitle, &__subtitle
+			font-size: 56px
+		&__title
+			font-size: 84px
+			letter-spacing: 0
+		&__desc
+			font-size: 34px
+
+@media only screen and (max-width : 1359.99px)
+	.section-header
+		padding-bottom: 40px
+		&__toptitle
+			font-size: 48px
+		&__title
+			font-size: 58px
+		&__subtitle
+			margin-bottom: 20px
+			font-size: 48px
+		&__desc
+			font-size: 28px
+
+@media only screen and (max-width : 1023px)
+	.section-header
+		padding-bottom: 30px
+		&__toptitle
+			font-size: 38px
+		&__title
+			margin-bottom: 10px
+			font-size: 48px
+		&__subtitle
+			font-size: 38px
+		&__desc
+			font-size: 24px
+
+@media only screen and (max-width : 767px)
+	.section-header
+		&_center
+			text-align: left
+
+@media only screen and (max-width : 575px)
+	.section-header
+		&__toptitle
+			font-size: 21px
+			letter-spacing: 0
+		&__title
+			font-size: 45px
+		&__subtitle
+			font-size: 32px
+		&__desc
+			font-size: 14px
+
+.social
+	position: fixed
+	top: 50%
+	transform: translateY(-50%)
+	right: 60px
+	display: flex
+	flex-direction: column
+	align-items: center
+	&__item
+		display: inline-block
+		width: 22px
+		margin: 12px 0
+
+.arrow-top
+	display: none
+	position: fixed
+	bottom: 60px
+	right: 12px
+	width: 41px
+	height: 41px
+	cursor: pointer
+	z-index: 700
+	opacity: 0
+	visibility: hidden
+	transition: opacity $anim
+	border-radius: 100%
+	background-color: #d4d4d4
+	&.show
+		visibility: visible
+		opacity: 0.8
+		&:hover
+			opacity: 1
+	&::before
+		content: ''
+		position: absolute
+		top: 50%
+		left: 50%
+		width: 18px
+		height: 26px
+		margin: -13px 0 0 -9px
+		background: url(../images/dist/arrow-top.svg) center no-repeat
+		background-size: contain

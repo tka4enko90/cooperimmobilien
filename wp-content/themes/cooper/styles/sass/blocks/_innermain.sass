@@ -1,0 +1,213 @@
+.section-innermain
+	padding-bottom: 15px
+
+.innermain
+	&-wrap
+		position: relative
+		height: 815px
+		background-repeat: no-repeat
+		background-position: top center
+		background-size: cover
+	&-desc
+		position: absolute
+		top: 205px
+		right: 0
+		width: calc(100% + 25px)
+		padding-right: 10px
+		z-index: 3
+		&__title
+			font-size: 63px
+		&__subtitle
+			font-size: 106px
+		&__title, &__subtitle
+			position: relative
+			margin-bottom: 0
+			font-weight: 400
+			color: $accent
+			line-height: 0.95
+			white-space: nowrap
+			&_back
+				position: absolute
+				width: 25px
+				overflow: hidden
+				top: 0
+				left: 0
+				z-index: 1
+				color: #000
+	&-bottom
+		position: relative
+		display: flex
+		align-items: center
+		justify-content: space-between
+		width: 965px
+		min-height: 200px
+		margin: -160px 0 0 80px
+		padding: 28px 40px
+		z-index: 3
+		background: #000
+		&::before
+			content: ''
+			position: absolute
+			bottom: 20px
+			right: 20px
+			width: 42px
+			height: 42px
+			background: url(../images/dist/marker.svg) 0 0 no-repeat
+			background-size: contain
+		&__info
+			position: relative
+			font-size: 25px
+			font-weight: 500
+			color: #c3c3c3
+			line-height: 1.62
+			letter-spacing: 0.6px
+			p
+				margin-bottom: 0
+
+.section-about
+	position: relative
+	padding: 40px 0
+	&.circle-grey
+		&:before
+			bottom: 7%
+
+.about
+	&-item
+		padding-bottom: 30px
+		&:nth-child(even)
+			.about-item
+				&-wrap
+					flex-direction: row-reverse
+					&::before
+						content: ''
+						position: absolute
+						top: -15%
+						right: -200px
+						width: 400px
+						height: 400px
+						z-index: -1
+						border-radius: 100%
+						background: $accent
+				&-desc
+					padding: 60px 20px 0 55px
+				&__pict
+					&::after
+						display: none
+		&:nth-child(2n+3)
+			.about-item__pict
+				&.circle-blue
+					&::after
+						bottom: -22px
+						left: -22px
+						width: 44px
+						height: 44px
+		&:not(:first-child)
+			.about-item
+				&-wrap
+					&::after
+						display: none
+				&__arrows
+					display: none
+		&-wrap
+			position: relative
+			display: flex
+			&::after
+				content: ''
+				position: absolute
+				top: 15%
+				right: -33px
+				width: 83px
+				height: 301px
+				z-index: -1
+				opacity: 0
+				transition: opacity $anim 1s
+				transition-duration: 1s
+				background: url(../images/dist/arrow.svg) 0 0 no-repeat
+				background-size: contain
+			&.aos-animate
+				&:before, &::after
+					opacity: 1 !important
+				*
+					&:before, &::after
+						opacity: 1 !important
+		&-desc
+			position: relative
+			display: flex
+			flex-direction: column
+			width: 38%
+			padding: 10px 20px 0 80px
+			&.circle-grey
+				&::before
+					display: none
+		&__arrows
+			position: absolute
+			display: flex
+			flex-direction: column
+			top: 12px
+			left: -80px
+			img
+				width: 35px
+				height: 68px
+				margin-bottom: 25px
+		&__text
+			font-size: 27px
+			line-height: 1.3
+		&__icon
+			display: flex
+			justify-content: center
+			align-items: center
+			height: 100%
+			padding: 20px 0
+			img
+				max-width: 140px
+		&__pict
+			position: relative
+			z-index: 1
+			&.circle-blue
+				&::after
+					bottom: -50px
+					left: -50px
+					width: 100px
+					height: 100px
+			img
+				width: 100%
+				height: 100%
+				object-fit: cover
+
+.section-getcontact
+	position: relative
+	padding-bottom: 100px
+	&.circle-blue
+		&::after
+			top: 10%
+			left: -524px
+	&.circle-grey
+		&:before
+			top: 12%
+	.section-header
+		padding-bottom: 0
+
+.getcontact
+	position: relative
+	display: flex
+	justify-content: space-between
+	&-desc
+		width: 38%
+		padding: 52px 20px 0 80px
+	&__text
+		font-size: 27px
+		line-height: 1.3
+	&__btn
+		max-width: 290px
+		margin-top: 75px
+	&-pict
+		flex: 0 0 auto
+		width: 445px
+		height: 445px
+		margin-right: 80px
+		overflow: hidden
+		border-radius: 100%
+		img
+			width: 100%
+			height: 100%
+			object-fit: cover
