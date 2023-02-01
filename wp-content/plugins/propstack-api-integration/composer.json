@@ -1,0 +1,15 @@
+{
+    "name": "markupus/propstack-api-integration",
+    "autoload": {
+        "psr-4": {
+            "Propstack\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "Igor Vertikov",
+            "email": "ivertikov@markupus.tech"
+        }
+    ],
+    "require": {}
+}
