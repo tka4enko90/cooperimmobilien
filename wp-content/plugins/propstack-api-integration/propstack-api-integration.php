@@ -17,9 +17,15 @@ class Propstack_API {
 		new RegisterFields();
 		add_action( 'init', [ $this, 'create_post_type' ] );
 		add_action( 'propstack_cron', [ $this, 'update_posts' ] );
+		add_action( 'insert_objects', [ $this, 'insert_posts' ] );
 		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
 			wp_schedule_event( time(), 'daily', 'propstack_cron' );
 		}
+		// for debug;
+//		add_action( 'propstack_delete', [ $this, 'remove_posts' ] );
+//		if ( is_admin() && ! wp_next_scheduled( 'propstack_delete' ) ) {
+//			wp_schedule_event( time(), 'daily', 'propstack_delete' );
+//		}
 	}
 
 	public function get_posts_from_api() {
@@ -46,7 +52,8 @@ class Propstack_API {
 				],
 				'public'      => true,
 				'has_archive' => true,
-				'menu_icon'   => 'dashicons-admin-home'
+				'menu_icon'   => 'dashicons-admin-home',
+				'rewrite'     => [ 'slug' => 'objects' ],
 			] );
 		}
 	}
@@ -90,7 +97,7 @@ class Propstack_API {
 		$new_posts = $this->get_posts_from_api();
 		$meta_ids  = [];
 
-		if (empty($new_posts)) {
+		if ( empty( $new_posts ) ) {
 			return;
 		}
 
@@ -114,13 +121,36 @@ class Propstack_API {
 	}
 
 	public function plugin_activation() {
-		$this->insert_posts();
+		if ( ! wp_next_scheduled( 'insert_objects' ) ) {
+			wp_schedule_single_event( time(), 'insert_objects' );
+		}
 	}
 
 	public static function plugin_deactivation() {
 		wp_clear_scheduled_hook( 'propstack_cron' );
 		unregister_post_type( 'objects' );
 		flush_rewrite_rules();
+	}
+
+	public function remove_posts() {
+		global $wpdb;
+		$posts = get_posts( [
+			'post_type'   => 'objects',
+			'numberposts' => - 1
+		] );
+
+		foreach ( $posts as $ex_post ) {
+			wp_delete_post( $ex_post->ID );
+		}
+
+		$query     = $wpdb->prepare( "select post_id from $wpdb->postmeta where meta_key = %s", '_source_url' );
+		$image_ids = $wpdb->get_col( $query );
+		var_dump( $image_ids );
+
+		foreach ( $image_ids as $image_id ) {
+			$res = wp_delete_attachment( intval( $image_id ) );
+			var_dump( $res );
+		}
 	}
 }
 

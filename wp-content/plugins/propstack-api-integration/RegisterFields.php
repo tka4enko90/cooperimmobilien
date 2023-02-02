@@ -221,6 +221,33 @@ class RegisterFields {
 						'prepend'           => '',
 						'append'            => '',
 					),
+					array(
+						'key'               => 'field_63db6bf723058',
+						'label'             => 'Gallery',
+						'name'              => 'gallery',
+						'type'              => 'gallery',
+						'instructions'      => '',
+						'required'          => 0,
+						'conditional_logic' => 0,
+						'wrapper'           => array(
+							'width' => '',
+							'class' => '',
+							'id'    => '',
+						),
+						'return_format'     => 'array',
+						'library'           => 'all',
+						'min'               => '',
+						'max'               => '',
+						'min_width'         => '',
+						'min_height'        => '',
+						'min_size'          => '',
+						'max_width'         => '',
+						'max_height'        => '',
+						'max_size'          => '',
+						'mime_types'        => '',
+						'insert'            => 'append',
+						'preview_size'      => 'medium',
+					),
 				),
 				'location'              => array(
 					array(
@@ -291,7 +318,27 @@ class RegisterFields {
 			update_field( 'living_space', $new_post->living_space, $post_id );
 		}
 
-//		if (isset())
+		if ( isset( $new_post->images ) ) {
+			global $wpdb;
+			require_once ABSPATH . 'wp-admin/includes/media.php';
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/image.php';
 
+
+			$query       = $wpdb->prepare( "select meta_value from $wpdb->postmeta where meta_key = %s", '_source_url' );
+			$sources     = $wpdb->get_col( $query );
+			$attachments = [];
+
+			foreach ( $new_post->images as $image ) {
+				$image_url = $image->original;
+				if ( ! in_array( $image_url, $sources ) ) {
+					$attachment_id = media_sideload_image( $image_url, $post_id, null, 'id' );
+					$attachments[] = $attachment_id;
+				}
+			}
+			if ( ! empty( $attachments ) ) {
+				update_field( 'gallery', $attachments, $post_id );
+			}
+		}
 	}
 }
