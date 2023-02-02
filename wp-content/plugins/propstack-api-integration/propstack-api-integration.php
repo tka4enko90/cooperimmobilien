@@ -11,25 +11,19 @@ use Propstack\RegisterFields;
 
 class Propstack_API {
 	const API_KEY = 'dirFYBYVSO07DIXKETK1xBK4CTlyFV9eeA0Z6ZMS';
-	const API_URL = 'https://api.propstack.de/v1';
+	const API_URL = 'https://api.propstack.de/v1/units';
 
 	public function __construct() {
 		new RegisterFields();
 		add_action( 'init', [ $this, 'create_post_type' ] );
 		add_action( 'propstack_cron', [ $this, 'update_posts' ] );
-		add_action( 'insert_objects', [ $this, 'insert_posts' ] );
 		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
 			wp_schedule_event( time(), 'daily', 'propstack_cron' );
 		}
-		// for debug;
-//		add_action( 'propstack_delete', [ $this, 'remove_posts' ] );
-//		if ( is_admin() && ! wp_next_scheduled( 'propstack_delete' ) ) {
-//			wp_schedule_event( time(), 'daily', 'propstack_delete' );
-//		}
 	}
 
 	public function get_posts_from_api() {
-		$url     = self::API_URL . '/units';
+		$url     = self::API_URL;
 		$headers = [
 			'X-API-KEY' => self::API_KEY
 		];
@@ -120,19 +114,13 @@ class Propstack_API {
 		$this->insert_posts( $new_posts );
 	}
 
-	public function plugin_activation() {
-		if ( ! wp_next_scheduled( 'insert_objects' ) ) {
-			wp_schedule_single_event( time(), 'insert_objects' );
-		}
-	}
-
 	public static function plugin_deactivation() {
 		wp_clear_scheduled_hook( 'propstack_cron' );
 		unregister_post_type( 'objects' );
 		flush_rewrite_rules();
 	}
 
-	public function remove_posts() {
+	public static function remove_posts() {
 		global $wpdb;
 		$posts = get_posts( [
 			'post_type'   => 'objects',
@@ -145,16 +133,13 @@ class Propstack_API {
 
 		$query     = $wpdb->prepare( "select post_id from $wpdb->postmeta where meta_key = %s", '_source_url' );
 		$image_ids = $wpdb->get_col( $query );
-		var_dump( $image_ids );
 
 		foreach ( $image_ids as $image_id ) {
-			$res = wp_delete_attachment( intval( $image_id ) );
-			var_dump( $res );
+			wp_delete_attachment( intval( $image_id ) );
 		}
 	}
 }
 
 $plugin = new Propstack_API();
 
-register_activation_hook( __FILE__, [ $plugin, 'plugin_activation' ] );
 register_deactivation_hook( __FILE__, [ $plugin, 'plugin_deactivation' ] );
