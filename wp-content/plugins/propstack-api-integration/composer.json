@@ -11,5 +11,7 @@
             "email": "ivertikov@markupus.tech"
         }
     ],
-    "require": {}
+    "require": {
+        "deliciousbrains/wp-background-processing": "^1.0"
+    }
 }

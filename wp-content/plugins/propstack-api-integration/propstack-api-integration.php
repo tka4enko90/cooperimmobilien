@@ -7,19 +7,22 @@ Author: Markupus
 
 require 'vendor/autoload.php';
 
-use Propstack\RegisterFields;
+use Propstack\Register_Fields;
+use Propstack\Insert_Posts_In_Background;
 
 class Propstack_API {
 	const API_KEY = 'dirFYBYVSO07DIXKETK1xBK4CTlyFV9eeA0Z6ZMS';
 	const API_URL = 'https://api.propstack.de/v1/units';
+	private $insert_posts_in_background;
 
 	public function __construct() {
-		new RegisterFields();
+		new Register_Fields();
+		$this->insert_posts_in_background = new Insert_Posts_In_Background();
 		add_action( 'init', [ $this, 'create_post_type' ] );
-		add_action( 'propstack_cron', [ $this, 'update_posts' ] );
-		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
-			wp_schedule_event( time(), 'daily', 'propstack_cron' );
-		}
+//		add_action( 'propstack_cron', [ $this, 'update_posts' ] );
+//		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
+//			wp_schedule_event( time(), 'daily', 'propstack_cron' );
+//		}
 	}
 
 	public function get_posts_from_api() {
@@ -58,33 +61,10 @@ class Propstack_API {
 		}
 
 		foreach ( $posts as $new_post ) {
-			$existing_post = get_posts( [
-				'post_type'   => 'objects',
-				'meta_key'    => 'api_id',
-				'meta_value'  => strval( $new_post->id ),
-				'numberposts' => - 1
-			] );
-
-			$post_args = [
-				'post_title'   => $new_post->name,
-				'post_content' => $new_post->title,
-				'post_author'  => 1,
-				'post_type'    => 'objects',
-				'post_status'  => 'publish'
-			];
-
-			if ( ! empty( $existing_post ) ) {
-				$post_args['ID'] = $existing_post[0]->ID;
-			}
-
-			$post_id = wp_insert_post( $post_args );
-
-			if ( $new_post->id ) {
-				update_post_meta( $post_id, 'api_id', strval( $new_post->id ) );
-			}
-
-			RegisterFields::updateFields( $new_post, $post_id );
+			$this->insert_posts_in_background->push_to_queue($new_post);
 		}
+
+		$this->insert_posts_in_background->save()->dispatch();
 	}
 
 	public function update_posts() {
@@ -142,4 +122,5 @@ class Propstack_API {
 
 $plugin = new Propstack_API();
 
+register_activation_hook(__FILE__, [$plugin, 'insert_posts']);
 register_deactivation_hook( __FILE__, [ $plugin, 'plugin_deactivation' ] );
