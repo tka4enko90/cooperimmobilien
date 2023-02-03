@@ -19,6 +19,8 @@ class Propstack_API {
 		new Register_Fields();
 		$this->insert_posts_in_background = new Insert_Posts_In_Background();
 		add_action( 'init', [ $this, 'create_post_type' ] );
+		add_action( 'admin_notices', [ $this, 'admin_notification' ] );
+
 //		add_action( 'propstack_cron', [ $this, 'update_posts' ] );
 //		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
 //			wp_schedule_event( time(), 'daily', 'propstack_cron' );
@@ -41,6 +43,7 @@ class Propstack_API {
 	}
 
 	public function create_post_type() {
+		global $wpdb;
 		if ( function_exists( 'register_post_type' ) ) {
 			register_post_type( 'objects', [
 				'labels'      => [
@@ -61,7 +64,7 @@ class Propstack_API {
 		}
 
 		foreach ( $posts as $new_post ) {
-			$this->insert_posts_in_background->push_to_queue($new_post);
+			$this->insert_posts_in_background->push_to_queue( $new_post );
 		}
 
 		$this->insert_posts_in_background->save()->dispatch();
@@ -94,10 +97,34 @@ class Propstack_API {
 		$this->insert_posts( $new_posts );
 	}
 
+	public function plugin_activation() {
+		add_option( 'insert_post_status', false );
+		add_option( 'insert_post_timestamp', false );
+		$this->insert_posts();
+	}
+
 	public static function plugin_deactivation() {
+		delete_option( 'insert_post_status' );
+		delete_option( 'insert_post_timestamp' );
 		wp_clear_scheduled_hook( 'propstack_cron' );
 		unregister_post_type( 'objects' );
 		flush_rewrite_rules();
+	}
+
+	public function admin_notification() {
+		$status    = get_option( 'inert_post_status' );
+		$timestamp = get_option( 'insert_post_timestamp' );
+		if ( $status == 'running' ) {
+			$class   = 'notice notice-info';
+			$message = 'Objects updating';
+			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
+		}
+
+		if ( $status === 'complete' && time() - $timestamp < 5 * 60 ) {
+			$message = 'Objects was updated';
+			$class   = 'notice notice-success';
+			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
+		}
 	}
 
 	public static function remove_posts() {
@@ -122,5 +149,5 @@ class Propstack_API {
 
 $plugin = new Propstack_API();
 
-register_activation_hook(__FILE__, [$plugin, 'insert_posts']);
+register_activation_hook( __FILE__, [ $plugin, 'plugin_activation' ] );
 register_deactivation_hook( __FILE__, [ $plugin, 'plugin_deactivation' ] );
