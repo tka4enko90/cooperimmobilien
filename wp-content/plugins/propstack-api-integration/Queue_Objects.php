@@ -31,20 +31,33 @@ class Queue_Objects extends WP_Async_Request {
 			$existing_ids[ $item['meta_value'] ] = $item['post_id'];
 		}
 
+		$fields = ['id', 'name', 'title', 'street', 'house_number', 'district', 'region', 'zip_code', 'city', 'address', 'short_address', 'number_of_rooms', 'price', 'living_space'];
 		$page  = 1;
 		while ( ! empty( $posts ) ) {
 
 			foreach ( $posts as $new_post ) {
-				if ( array_key_exists( $new_post->id, $existing_ids ) ) {
-					$new_post->existing_post_id = $existing_ids[ $new_post->id ];
+				$item = [];
+				foreach ( $fields as $field ) {
+					$item[$field] = $new_post[$field];
 				}
-				$this->insert_posts->push_to_queue( $new_post );
+				if (isset($new_post['images'])) {
+					$item['images'] = [];
+					foreach ( $new_post['images'] as $image ) {
+						$item['images'][] = $image['original'];
+					}
+				}
+
+				if ( array_key_exists( $new_post['id'], $existing_ids ) ) {
+					$item['existing_post_id'] = $existing_ids[ $new_post['id'] ];
+				}
+				$this->insert_posts->push_to_queue( $item );
 			}
-			$this->insert_posts->save()->dispatch();
 
 			$page ++;
 			$posts = $this->get_posts_from_api( $page );
 		}
+
+		$this->insert_posts->save()->dispatch();
 	}
 
 	protected function get_posts_from_api( $page = 1 ) {
@@ -56,7 +69,7 @@ class Queue_Objects extends WP_Async_Request {
 		$response = wp_remote_get( $url, [ 'headers' => $headers ] );
 
 		if ( isset( $response['response']['code'] ) && $response['response']['code'] === 200 ) {
-			return json_decode( $response['body'] );
+			return json_decode( $response['body'], true );
 		}
 
 		return false;

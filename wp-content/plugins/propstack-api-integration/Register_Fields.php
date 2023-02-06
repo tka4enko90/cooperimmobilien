@@ -274,51 +274,51 @@ class Register_Fields {
 
 	public static function updateFields( $new_post, $post_id ) {
 
-		if ( isset( $new_post->street ) ) {
-			update_field( 'street', $new_post->street, $post_id );
-		}
+//		if ( isset( $new_post->street ) ) {
+//			update_field( 'street', $new_post->street, $post_id );
+//		}
+//
+//		if ( isset( $new_post->house_number ) ) {
+//			update_field( 'house_number', $new_post->house_number, $post_id );
+//		}
+//
+//		if ( isset( $new_post->district ) ) {
+//			update_field( 'district', $new_post->district, $post_id );
+//		}
+//
+//		if ( isset( $new_post->region ) ) {
+//			update_field( 'region', $new_post->region, $post_id );
+//		}
+//
+//		if ( isset( $new_post->zip_code ) ) {
+//			update_field( 'zip_code', $new_post->zip_code, $post_id );
+//		}
+//
+//		if ( isset( $new_post->city ) ) {
+//			update_field( 'city', $new_post->city, $post_id );
+//		}
+//
+//		if ( isset( $new_post->address ) ) {
+//			update_field( 'address', $new_post->address, $post_id );
+//		}
+//
+//		if ( isset( $new_post->short_address ) ) {
+//			update_field( 'short_address', $new_post->short_address, $post_id );
+//		}
+//
+//		if ( isset( $new_post->number_of_rooms ) ) {
+//			update_field( 'number_of_rooms', $new_post->number_of_rooms, $post_id );
+//		}
+//
+//		if ( isset( $new_post->price ) ) {
+//			update_field( 'price', $new_post->price, $post_id );
+//		}
+//
+//		if ( isset( $new_post->living_space ) ) {
+//			update_field( 'living_space', $new_post->living_space, $post_id );
+//		}
 
-		if ( isset( $new_post->house_number ) ) {
-			update_field( 'house_number', $new_post->house_number, $post_id );
-		}
-
-		if ( isset( $new_post->district ) ) {
-			update_field( 'district', $new_post->district, $post_id );
-		}
-
-		if ( isset( $new_post->region ) ) {
-			update_field( 'region', $new_post->region, $post_id );
-		}
-
-		if ( isset( $new_post->zip_code ) ) {
-			update_field( 'zip_code', $new_post->zip_code, $post_id );
-		}
-
-		if ( isset( $new_post->city ) ) {
-			update_field( 'city', $new_post->city, $post_id );
-		}
-
-		if ( isset( $new_post->address ) ) {
-			update_field( 'address', $new_post->address, $post_id );
-		}
-
-		if ( isset( $new_post->short_address ) ) {
-			update_field( 'short_address', $new_post->short_address, $post_id );
-		}
-
-		if ( isset( $new_post->number_of_rooms ) ) {
-			update_field( 'number_of_rooms', $new_post->number_of_rooms, $post_id );
-		}
-
-		if ( isset( $new_post->price ) ) {
-			update_field( 'price', $new_post->price, $post_id );
-		}
-
-		if ( isset( $new_post->living_space ) ) {
-			update_field( 'living_space', $new_post->living_space, $post_id );
-		}
-
-		if ( isset( $new_post->images ) ) {
+		if ( isset( $new_post['images'] ) ) {
 			global $wpdb;
 			require_once ABSPATH . 'wp-admin/includes/media.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -329,10 +329,9 @@ class Register_Fields {
 			$sources     = $wpdb->get_col( $query );
 			$attachments = [];
 
-			foreach ( $new_post->images as $image ) {
-				$image_url = $image->original;
-				if ( ! in_array( $image_url, $sources ) ) {
-					$attachment_id = media_sideload_image( $image_url, $post_id, null, 'id' );
+			foreach ( $new_post['images'] as $image ) {
+				if ( ! in_array( $image, $sources ) ) {
+					$attachment_id = media_sideload_image( $image, $post_id, null, 'id' );
 					$attachments[] = $attachment_id;
 				}
 			}

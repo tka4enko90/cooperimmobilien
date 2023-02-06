@@ -19,6 +19,7 @@ class Propstack_API {
 		$this->queue_objects = new Queue_Objects();
 
 		add_action( 'init', [ $this, 'create_post_type' ] );
+//		add_action( 'init', [ $this, 'insert_posts' ] );
 		add_action( 'admin_notices', [ $this, 'admin_notification' ] );
 		add_action( 'propstack_cron', [ $this, 'insert_posts' ] );
 
