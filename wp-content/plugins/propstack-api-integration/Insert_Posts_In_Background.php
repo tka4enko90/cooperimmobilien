@@ -6,10 +6,11 @@ namespace Propstack;
 use WP_Background_Process;
 
 class Insert_Posts_In_Background extends WP_Background_Process {
-	protected $action = 'insert_post_in_background';
+
+	protected $action = 'insert_posts';
 
 	protected function task( $item ) {
-		update_option( 'inert_post_status', 'running' );
+		update_option( 'insert_post_status', 'running' );
 
 		$new_post_args = [
 			'post_title'   => $item->name,
@@ -36,7 +37,7 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 
 	protected function complete() {
 		parent::complete();
-		update_option( 'inert_post_status', 'complete' );
+		update_option( 'insert_post_status', 'complete' );
 		update_option( 'insert_post_timestamp', time() );
 	}
 }

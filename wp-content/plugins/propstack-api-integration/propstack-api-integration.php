@@ -7,40 +7,24 @@ Author: Markupus
 
 require 'vendor/autoload.php';
 
+use Propstack\Queue_Objects;
 use Propstack\Register_Fields;
-use Propstack\Insert_Posts_In_Background;
 
 class Propstack_API {
-	const API_KEY = 'dirFYBYVSO07DIXKETK1xBK4CTlyFV9eeA0Z6ZMS';
-	const API_URL = 'https://api.propstack.de/v1/units';
-	private $insert_posts_in_background;
+
+	protected $queue_objects;
 
 	public function __construct() {
 		new Register_Fields();
-		$this->insert_posts_in_background = new Insert_Posts_In_Background();
+		$this->queue_objects = new Queue_Objects();
+
 		add_action( 'init', [ $this, 'create_post_type' ] );
 		add_action( 'admin_notices', [ $this, 'admin_notification' ] );
 		add_action( 'propstack_cron', [ $this, 'insert_posts' ] );
-//		add_action( 'insert_objects', [ $this, 'insert_posts' ] );
 
 		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
 			wp_schedule_event( time(), 'daily', 'propstack_cron' );
 		}
-	}
-
-	public function get_posts_from_api( $page = 1 ) {
-		$url     = self::API_URL . '?page=' . $page;
-		$headers = [
-			'X-API-KEY' => self::API_KEY
-		];
-
-		$response = wp_remote_get( $url, [ 'headers' => $headers ] );
-
-		if ( isset( $response['response']['code'] ) && $response['response']['code'] === 200 ) {
-			return json_decode( $response['body'] );
-		}
-
-		return false;
 	}
 
 	public function create_post_type() {
@@ -59,37 +43,7 @@ class Propstack_API {
 	}
 
 	public function insert_posts() {
-		global $wpdb;
-
-		$page  = 1;
-		$posts = $this->get_posts_from_api( $page );
-
-		if ( ! $posts ) {
-			update_option( 'insert_post_status', 'error' );
-
-			return;
-		}
-
-		$existing_ids_db = $wpdb->get_results( "select post_id, meta_value from $wpdb->postmeta where meta_key = 'api_id'", ARRAY_A );
-		$existing_ids    = [];
-
-		foreach ( $existing_ids_db as $item ) {
-			$existing_ids[ $item['meta_value'] ] = $item['post_id'];
-		}
-
-		while ( ! empty( $posts ) ) {
-			foreach ( $posts as $new_post ) {
-				if ( array_key_exists( $new_post->id, $existing_ids ) ) {
-					$new_post->existing_post_id = $existing_ids[ $new_post->id ];
-				}
-				$this->insert_posts_in_background->push_to_queue( $new_post );
-			}
-			$page ++;
-			$posts = $this->get_posts_from_api( $page );
-		}
-
-		$this->insert_posts_in_background->save()->dispatch();
-
+		$this->queue_objects->dispatch();
 	}
 
 	public function plugin_activation() {
@@ -109,7 +63,7 @@ class Propstack_API {
 	}
 
 	public function admin_notification() {
-		$status    = get_option( 'inert_post_status' );
+		$status    = get_option( 'insert_post_status' );
 		$timestamp = intval(get_option( 'insert_post_timestamp' ));
 		if ( $status == 'running' ) {
 			$class   = 'notice notice-info';
@@ -123,7 +77,7 @@ class Propstack_API {
 			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
 		}
 
-		if ( $status === 'Error' && time() - $timestamp < 5 * 60 ) {
+		if ( $status === 'error' && time() - $timestamp < 5 * 60 ) {
 			$message = 'Couldn\'t update objects. Something went wrong.';
 			$class   = 'notice notice-error';
 			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
