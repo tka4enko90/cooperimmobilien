@@ -9,14 +9,7 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 	protected $action = 'insert_post_in_background';
 
 	protected function task( $item ) {
-		global $wpdb;
 		update_option( 'inert_post_status', 'running' );
-		$existing_post = get_posts( [
-			'post_type'   => 'objects',
-			'meta_key'    => 'api_id',
-			'meta_value'  => strval( $item->id ),
-			'numberposts' => - 1
-		] );
 
 		$new_post_args = [
 			'post_title'   => $item->name,
@@ -26,8 +19,8 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 			'post_status'  => 'publish'
 		];
 
-		if ( ! empty( $existing_post ) ) {
-			$new_post_args['ID'] = $existing_post[0]->ID;
+		if ( isset( $item->existing_post_id ) ) {
+			$new_post_args['ID'] = intval($item->existing_post_id);
 		}
 
 		$post_id = wp_insert_post( $new_post_args );

@@ -20,15 +20,16 @@ class Propstack_API {
 		$this->insert_posts_in_background = new Insert_Posts_In_Background();
 		add_action( 'init', [ $this, 'create_post_type' ] );
 		add_action( 'admin_notices', [ $this, 'admin_notification' ] );
+		add_action( 'propstack_cron', [ $this, 'insert_posts' ] );
+//		add_action( 'insert_objects', [ $this, 'insert_posts' ] );
 
-//		add_action( 'propstack_cron', [ $this, 'update_posts' ] );
-//		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
-//			wp_schedule_event( time(), 'daily', 'propstack_cron' );
-//		}
+		if ( is_admin() && ! wp_next_scheduled( 'propstack_cron' ) ) {
+			wp_schedule_event( time(), 'daily', 'propstack_cron' );
+		}
 	}
 
-	public function get_posts_from_api() {
-		$url     = self::API_URL;
+	public function get_posts_from_api( $page = 1 ) {
+		$url     = self::API_URL . '?page=' . $page;
 		$headers = [
 			'X-API-KEY' => self::API_KEY
 		];
@@ -39,11 +40,10 @@ class Propstack_API {
 			return json_decode( $response['body'] );
 		}
 
-		return [];
+		return false;
 	}
 
 	public function create_post_type() {
-		global $wpdb;
 		if ( function_exists( 'register_post_type' ) ) {
 			register_post_type( 'objects', [
 				'labels'      => [
@@ -58,62 +58,59 @@ class Propstack_API {
 		}
 	}
 
-	public function insert_posts( $posts = false ) {
+	public function insert_posts() {
+		global $wpdb;
+
+		$page  = 1;
+		$posts = $this->get_posts_from_api( $page );
+
 		if ( ! $posts ) {
-			$posts = $this->get_posts_from_api();
-		}
+			update_option( 'insert_post_status', 'error' );
 
-		foreach ( $posts as $new_post ) {
-			$this->insert_posts_in_background->push_to_queue( $new_post );
-		}
-
-		$this->insert_posts_in_background->save()->dispatch();
-	}
-
-	public function update_posts() {
-		$new_posts = $this->get_posts_from_api();
-		$meta_ids  = [];
-
-		if ( empty( $new_posts ) ) {
 			return;
 		}
 
-		foreach ( $new_posts as $new_post ) {
-			$meta_ids[] = strval( $new_post->id );
+		$existing_ids_db = $wpdb->get_results( "select post_id, meta_value from $wpdb->postmeta where meta_key = 'api_id'", ARRAY_A );
+		$existing_ids    = [];
+
+		foreach ( $existing_ids_db as $item ) {
+			$existing_ids[ $item['meta_value'] ] = $item['post_id'];
 		}
 
-		$existing_posts = get_posts( [
-			'numberposts' => - 1,
-			'post_type'   => 'objects',
-		] );
-
-		foreach ( $existing_posts as $existing_post ) {
-			$existing_post_api_id = get_post_meta( $existing_post->ID, 'api_id', true );
-			if ( $existing_post_api_id && ! in_array( $existing_post_api_id, $meta_ids ) ) {
-				wp_delete_post( $existing_post->ID );
+		while ( ! empty( $posts ) ) {
+			foreach ( $posts as $new_post ) {
+				if ( array_key_exists( $new_post->id, $existing_ids ) ) {
+					$new_post->existing_post_id = $existing_ids[ $new_post->id ];
+				}
+				$this->insert_posts_in_background->push_to_queue( $new_post );
 			}
+			$page ++;
+			$posts = $this->get_posts_from_api( $page );
 		}
 
-		$this->insert_posts( $new_posts );
+		$this->insert_posts_in_background->save()->dispatch();
+
 	}
 
 	public function plugin_activation() {
 		add_option( 'insert_post_status', false );
 		add_option( 'insert_post_timestamp', false );
-		$this->insert_posts();
 	}
 
 	public static function plugin_deactivation() {
 		delete_option( 'insert_post_status' );
 		delete_option( 'insert_post_timestamp' );
-		wp_clear_scheduled_hook( 'propstack_cron' );
+
+		$timestamp = wp_next_scheduled( 'propstack_cron' );
+		wp_unschedule_event( $timestamp, 'propstack_cron' );
+
 		unregister_post_type( 'objects' );
 		flush_rewrite_rules();
 	}
 
 	public function admin_notification() {
 		$status    = get_option( 'inert_post_status' );
-		$timestamp = get_option( 'insert_post_timestamp' );
+		$timestamp = intval(get_option( 'insert_post_timestamp' ));
 		if ( $status == 'running' ) {
 			$class   = 'notice notice-info';
 			$message = 'Objects updating';
@@ -123,6 +120,12 @@ class Propstack_API {
 		if ( $status === 'complete' && time() - $timestamp < 5 * 60 ) {
 			$message = 'Objects was updated';
 			$class   = 'notice notice-success';
+			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
+		}
+
+		if ( $status === 'Error' && time() - $timestamp < 5 * 60 ) {
+			$message = 'Couldn\'t update objects. Something went wrong.';
+			$class   = 'notice notice-error';
 			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
 		}
 	}
