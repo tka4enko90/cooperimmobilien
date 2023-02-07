@@ -10,6 +10,7 @@ require 'vendor/autoload.php';
 use Propstack\Queue_Objects;
 use Propstack\Register_Fields;
 
+// ToDo Propstack_Addon
 class Propstack_API {
 
 	protected $queue_objects;
@@ -19,7 +20,7 @@ class Propstack_API {
 		$this->queue_objects = new Queue_Objects();
 
 		add_action( 'init', [ $this, 'create_post_type' ] );
-//		add_action( 'init', [ $this, 'insert_posts' ] );
+
 		add_action( 'admin_notices', [ $this, 'admin_notification' ] );
 		add_action( 'propstack_cron', [ $this, 'insert_posts' ] );
 
@@ -103,6 +104,15 @@ class Propstack_API {
 			wp_delete_attachment( intval( $image_id ) );
 		}
 	}
+}
+
+if ( ! class_exists('ACF') ) {
+	add_action('admin_notices', 'require_acf_plugin');
+	deactivate_plugins('propstack-api-integration/SendMyCall.php');
+	return;
+}
+function require_acf_plugin() {
+	echo '<div class="notice notice-error"><p>Please activate ACF plugin before using Propstack API Integration plugin</p></div>';
 }
 
 $plugin = new Propstack_API();

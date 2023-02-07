@@ -3,6 +3,7 @@ namespace Propstack;
 
 use WP_Async_Request;
 
+// ToDo name Propstack_API
 class Queue_Objects extends WP_Async_Request {
 	protected $action = 'queue_objects';
 
@@ -24,6 +25,7 @@ class Queue_Objects extends WP_Async_Request {
 			return;
 		}
 
+		//ToDo api_id should be item_id
 		$existing_ids_db = $wpdb->get_results( "select post_id, meta_value from $wpdb->postmeta where meta_key = 'api_id'", ARRAY_A );
 		$existing_ids    = [];
 
@@ -33,7 +35,7 @@ class Queue_Objects extends WP_Async_Request {
 
 		$fields = ['id', 'name', 'title', 'street', 'house_number', 'district', 'region', 'zip_code', 'city', 'address', 'short_address', 'number_of_rooms', 'price', 'living_space'];
 		$page  = 1;
-		while ( ! empty( $posts ) ) {
+		while ( ! empty( $posts )) {
 
 			foreach ( $posts as $new_post ) {
 				$item = [];
@@ -47,8 +49,8 @@ class Queue_Objects extends WP_Async_Request {
 					}
 				}
 
-				if ( array_key_exists( $new_post['id'], $existing_ids ) ) {
-					$item['existing_post_id'] = $existing_ids[ $new_post['id'] ];
+				if ( array_key_exists( $item['id'], $existing_ids ) ) {
+					$item['existing_post_id'] = $existing_ids[ $item['id'] ];
 				}
 				$this->insert_posts->push_to_queue( $item );
 			}
@@ -61,6 +63,7 @@ class Queue_Objects extends WP_Async_Request {
 	}
 
 	protected function get_posts_from_api( $page = 1 ) {
+		// todo add status
 		$url     = 'https://api.propstack.de/v1/units?page=' . $page;
 		$headers = [
 			'X-API-KEY' => 'dirFYBYVSO07DIXKETK1xBK4CTlyFV9eeA0Z6ZMS'
