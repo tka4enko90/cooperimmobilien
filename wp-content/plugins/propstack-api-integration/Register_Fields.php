@@ -318,21 +318,21 @@ class Register_Fields {
 			update_field( 'living_space', $new_post['living_space'], $post_id );
 		}
 
-//		if ( isset( $new_post['images'] ) ) {
-//			require_once ABSPATH . 'wp-admin/includes/media.php';
-//			require_once ABSPATH . 'wp-admin/includes/file.php';
-//			require_once ABSPATH . 'wp-admin/includes/image.php';
-//			$attachments = [];
-//
-//			foreach ( $new_post['images'] as $image ) {
-//				if ( ! in_array( $image, $existing_images ) ) {
-//					$attachment_id = media_sideload_image( $image, $post_id, null, 'id' );
-//					$attachments[] = $attachment_id;
-//				}
-//			}
-//			if ( ! empty( $attachments ) ) {
-//				update_field( 'gallery', $attachments, $post_id );
-//			}
-//		}
+		if ( isset( $new_post['images'] ) ) {
+			require_once ABSPATH . 'wp-admin/includes/media.php';
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+			$attachments = [];
+
+			foreach ( $new_post['images'] as $image ) {
+				if ( ! in_array( $image, $existing_images ) ) {
+					$attachment_id = media_sideload_image( $image, $post_id, null, 'id' );
+					$attachments[] = $attachment_id;
+				}
+			}
+			if ( ! empty( $attachments ) ) {
+				update_field( 'gallery', $attachments, $post_id );
+			}
+		}
 	}
 }

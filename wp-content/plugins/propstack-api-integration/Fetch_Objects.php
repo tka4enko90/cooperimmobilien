@@ -23,6 +23,7 @@ class Fetch_Objects extends WP_Async_Request {
 
 		$db               = new Propstack_DB();
 		$existing_objects = $db->get_objects_ids();
+		$new_objects_ids = [];
 
 		if ( empty( $objects ) ) {
 			update_option( 'insert_post_status', 'error' );
@@ -50,6 +51,7 @@ class Fetch_Objects extends WP_Async_Request {
 
 		$counter = 0;
 		foreach ( $objects as $object ) {
+			$new_objects_ids[$object['id']] = '';
 			$item            = [];
 			$object_response = $api->get_object( $object['id'] );
 			if ( isset( $object_response['updated_at'] ) ) {
@@ -79,6 +81,11 @@ class Fetch_Objects extends WP_Async_Request {
 			$counter++;
 			$this->insert_posts->push_to_queue( $item );
 		}
+
+//		$objects_to_remove = array_diff_key($existing_objects, $new_objects_ids);
+//		foreach ( $objects_to_remove as $item ) {
+//			wp_delete_post($item);
+//		}
 
 		if ($counter === 0) {
 			update_option('insert_post_status', 'complete');
