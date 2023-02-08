@@ -7,20 +7,18 @@ Author: Markupus
 
 require 'vendor/autoload.php';
 
-use Propstack\Queue_Objects;
+use Propstack\Fetch_Objects;
 use Propstack\Register_Fields;
 
-// ToDo Propstack_Addon
-class Propstack_API {
+class Propstack_Addon {
 
-	protected $queue_objects;
+	protected $fetch_objects;
 
 	public function __construct() {
 		new Register_Fields();
-		$this->queue_objects = new Queue_Objects();
+		$this->fetch_objects = new Fetch_Objects;
 
 		add_action( 'init', [ $this, 'create_post_type' ] );
-
 		add_action( 'admin_notices', [ $this, 'admin_notification' ] );
 		add_action( 'propstack_cron', [ $this, 'insert_posts' ] );
 
@@ -45,7 +43,7 @@ class Propstack_API {
 	}
 
 	public function insert_posts() {
-		$this->queue_objects->dispatch();
+		$this->fetch_objects->dispatch();
 	}
 
 	public function plugin_activation() {
@@ -70,6 +68,12 @@ class Propstack_API {
 		if ( $status == 'running' ) {
 			$class   = 'notice notice-info';
 			$message = 'Objects updating';
+			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
+		}
+
+		if ( $status == 'fetching' ) {
+			$class   = 'notice notice-info';
+			$message = 'Objects fetching';
 			printf( '<div class="%s"><p>%s</p></div>', $class, $message );
 		}
 
@@ -115,7 +119,7 @@ function require_acf_plugin() {
 	echo '<div class="notice notice-error"><p>Please activate ACF plugin before using Propstack API Integration plugin</p></div>';
 }
 
-$plugin = new Propstack_API();
+$plugin = new Propstack_Addon();
 
 register_activation_hook( __FILE__, [ $plugin, 'plugin_activation' ] );
 register_deactivation_hook( __FILE__, [ $plugin, 'plugin_deactivation' ] );

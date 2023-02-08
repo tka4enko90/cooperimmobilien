@@ -4,6 +4,7 @@ namespace Propstack;
 
 
 use WP_Background_Process;
+use Propstack\DB\Propstack_DB;
 
 class Insert_Posts_In_Background extends WP_Background_Process {
 
@@ -14,9 +15,8 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 	public function __construct() {
 		parent::__construct();
 
-		global $wpdb;
-		$query                 = $wpdb->prepare( "select meta_value from $wpdb->postmeta where meta_key = %s", '_source_url' );
-		$this->existing_images = $wpdb->get_col( $query );
+		$db = new Propstack_DB();
+		$this->existing_images = $db->get_uploaded_images_source();
 	}
 
 	protected function task( $item ) {
@@ -37,7 +37,11 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 		$post_id = wp_insert_post( $new_post_args );
 
 		if ( $item['id'] ) {
-			update_post_meta( $post_id, 'api_id', strval( $item['id'] ) );
+			update_post_meta( $post_id, 'item_id', strval( $item['id'] ) );
+		}
+
+		if (isset($item['updated_at'])) {
+			update_post_meta($post_id, 'updated_at', $item['updated_at']);
 		}
 
 		Register_Fields::updateFields( $item, $post_id, $this->existing_images );
