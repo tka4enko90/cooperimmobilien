@@ -10,17 +10,12 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 
 	protected $action = 'insert_posts';
 
-	protected $existing_images;
-
-	public function __construct() {
-		parent::__construct();
-
-		$db = new Propstack_DB();
-		$this->existing_images = $db->get_uploaded_images_source();
-	}
-
 	protected function task( $item ) {
 		update_option( 'insert_post_status', 'running' );
+
+		$db = new Propstack_DB();
+		$existing_objects = $db->get_objects_ids();
+		$existing_images = $db->get_uploaded_images_source();
 
 		$new_post_args = [
 			'post_title'   => $item['name'],
@@ -30,8 +25,8 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 			'post_status'  => 'publish'
 		];
 
-		if ( isset( $item['existing_post_id'] ) ) {
-			$new_post_args['ID'] = intval( $item['existing_post_id'] );
+		if (array_key_exists($item['id'], $existing_objects)) {
+			$new_post_args['ID'] = $existing_objects[$item['id']];
 		}
 
 		$post_id = wp_insert_post( $new_post_args );
@@ -44,7 +39,7 @@ class Insert_Posts_In_Background extends WP_Background_Process {
 			update_post_meta($post_id, 'updated_at', $item['updated_at']);
 		}
 
-		Register_Fields::updateFields( $item, $post_id, $this->existing_images );
+		Register_Fields::updateFields( $item, $post_id, $existing_images );
 
 		return false;
 	}

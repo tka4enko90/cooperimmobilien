@@ -327,7 +327,9 @@ class Register_Fields {
 			foreach ( $new_post['images'] as $image ) {
 				if ( ! in_array( $image, $existing_images ) ) {
 					$attachment_id = media_sideload_image( $image, $post_id, null, 'id' );
-					$attachments[] = $attachment_id;
+					if (!is_wp_error($attachment_id)) {
+						$attachments[] = $attachment_id;
+					}
 				}
 			}
 			if ( ! empty( $attachments ) ) {

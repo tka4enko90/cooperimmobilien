@@ -90,7 +90,7 @@ class Propstack_Addon {
 		}
 	}
 
-	public static function remove_posts() {
+	public function remove_posts() {
 		global $wpdb;
 		$posts = get_posts( [
 			'post_type'   => 'objects',
