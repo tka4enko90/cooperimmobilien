@@ -18,6 +18,7 @@ class Propstack_Addon {
 		new Register_Fields();
 		$this->fetch_objects = new Fetch_Objects;
 
+		add_action('init', [$this, 'create_taxonomy']);
 		add_action( 'init', [ $this, 'create_post_type' ] );
 		add_action( 'admin_notices', [ $this, 'admin_notification' ] );
 		add_action( 'propstack_cron', [ $this, 'insert_posts' ] );
@@ -39,6 +40,20 @@ class Propstack_Addon {
 				'menu_icon'   => 'dashicons-admin-home',
 				'rewrite'     => [ 'slug' => 'objects' ],
 			] );
+		}
+	}
+
+	public function create_taxonomy() {
+		$args = [
+			'labels'                => [
+				'name'              => 'Object tags',
+				'singular_name'     => 'Object tag',
+			],
+			'public'                => true,
+		];
+
+		if (function_exists('register_taxonomy')) {
+			register_taxonomy('object_tags', 'objects', $args);
 		}
 	}
 
