@@ -21,7 +21,7 @@ Before installing the plugin, ensure that your WordPress installation meets the 
 ## Installation
 
 1. Clone the repository to your local machine or server:
-```bash
+bash
 git clone https://github.com/tka4enko90/cooperimmobilien.git
 
 2. Upload the `cooperimmobilien` directory to the `wp-content/plugins/` directory of your WordPress installation.
