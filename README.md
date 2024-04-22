@@ -21,14 +21,11 @@ Before installing the plugin, ensure that your WordPress installation meets the 
 ## Installation
 
 1. Clone the repository to your local machine or server:
-
 ```bash
 git clone https://github.com/tka4enko90/cooperimmobilien.git
-# Cooper Immobilien Real Estate Quiz
-
-## Installation
 
 2. Upload the `cooperimmobilien` directory to the `wp-content/plugins/` directory of your WordPress installation.
+
 3. Log in to your WordPress dashboard, navigate to the Plugins section, and activate the Cooper Immobilien Real Estate Quiz plugin.
 
 ## Configuration
